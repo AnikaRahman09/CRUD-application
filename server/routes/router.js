@@ -11,7 +11,7 @@ router.post("/register", async(req, res)=> {
     const {name, email, age, mobile, work, address, description} = req.body;
 
     if(!name || !email || !age || !mobile || !work || !address || !description){
-        res.status(404).json("please fill up the data");
+        res.status(422).json("please fill up the data");
     }
 
     try {
@@ -20,7 +20,7 @@ router.post("/register", async(req, res)=> {
         console.log(preuser);
 
         if(preuser){
-            res.status(404).json("This user is already registered. Email already in use.");
+            res.status(422).json("This user is already registered. Email already in use.");
         }else {
             const adduser = new users({
                 name, email, age, mobile, work, address, description
@@ -32,7 +32,7 @@ router.post("/register", async(req, res)=> {
         }
 
     } catch (error) {
-        res.status(404).json(error);
+        res.status(422).json(error);
     }
 })
 
@@ -44,7 +44,23 @@ router.get("/getdata", async(req, res) => {
         res.status(201).json(userdata);
         console.log(userdata);
     } catch (error) {
-        res.status(404).json(error);
+        res.status(422).json(error);
+    }
+})
+
+
+// get individual user
+router.get("/getuser/:id", async(req, res) => {
+    try {
+        console.log(req.params.id);
+        const {id} = req.params;
+
+        const userindividual = await users.findById({_id:id});
+        console.log(userindividual);
+        
+        res.status(201).json(userindividual);
+    }catch (error) {
+        res.status(422).json(error);
     }
 })
 
